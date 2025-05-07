@@ -1,73 +1,116 @@
-# Welcome to your Lovable project
 
-## Project info
+# Capital Market License Registry
 
-**URL**: https://lovable.dev/projects/81690e0e-50b4-43aa-a0d9-dc995a93843f
+A web-based application for generating and managing capital market licenses with AI-powered automation.
 
-## How can I edit this code?
+## Core Functionalities
 
-There are several ways of editing your application.
+- **License Generation**: Create professional capital market licenses with customizable fields
+- **AI Integration**: Auto-fills license information and compliance requirements
+- **Document Export**: Download licenses in PDF, JPG, or Excel format
+- **Compliance Tracking**: Automatically generates compliance tables with legal provisions
+- **Developer Mode**: Configure AI parameters and models
 
-**Use Lovable**
+## Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/81690e0e-50b4-43aa-a0d9-dc995a93843f) and start prompting.
+- **Frontend**: React, TypeScript, Tailwind CSS, shadcn UI
+- **Backend**: Supabase (database, authentication, storage)
+- **AI Integration**: Pluggable configuration for various AI providers (Groq, OpenAI, etc.)
+- **Document Generation**: html2canvas, jsPDF
+- **State Management**: React hooks
 
-Changes made via Lovable will be committed automatically to this repo.
+## Application Structure
 
-**Use your preferred IDE**
+### Components
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- `LicenseForm.tsx`: Form for entering license details
+- `LicensePreview.tsx`: Visual preview of the generated license
+- `ComplianceTable.tsx`: Displays regulatory compliance requirements
+- `ExportOptions.tsx`: Options for exporting the license in different formats
+- `AiConfigPanel.tsx`: UI for configuring AI parameters
+- `Header.tsx`: Application header with navigation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Services
 
-Follow these steps:
+- `aiService.ts`: Service for connecting to and using AI providers
+- `Data files`: License types and compliance data
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Pages
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- `Index.tsx`: Main application page with tabs for different sections
 
-# Step 3: Install the necessary dependencies.
-npm i
+## AI Configuration
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+The application supports multiple AI providers:
 
-**Edit a file directly in GitHub**
+- Groq (deepseek-r1-distill-llama-70b)
+- OpenAI
+- Anthropic
+- DeepSeek
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Parameters that can be configured include:
+- Model selection
+- Temperature
+- Maximum tokens
+- Streaming mode
 
-**Use GitHub Codespaces**
+## Database Schema (Supabase)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Tables
 
-## What technologies are used for this project?
+1. **Licenses**
+   - id: UUID (primary key)
+   - company_name: String
+   - license_type: String
+   - license_number: String
+   - activity_description: String
+   - issue_date: Date
+   - expiry_date: Date
+   - created_at: Timestamp
+   - updated_at: Timestamp
+   - created_by: UUID (foreign key to users)
 
-This project is built with:
+2. **LicenseTypes**
+   - id: UUID (primary key)
+   - name: String
+   - description: String
+   - act_sections: String[]
+   - default_activity: String
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. **ComplianceItems**
+   - id: UUID (primary key)
+   - license_type_id: UUID (foreign key to license_types)
+   - category: String
+   - items: String[]
+   - reference: String
 
-## How can I deploy this project?
+4. **AIConfigurations**
+   - id: UUID (primary key)
+   - user_id: UUID (foreign key to users)
+   - provider: String
+   - model: String
+   - temperature: Float
+   - max_tokens: Integer
+   - streaming: Boolean
+   - created_at: Timestamp
+   - updated_at: Timestamp
 
-Simply open [Lovable](https://lovable.dev/projects/81690e0e-50b4-43aa-a0d9-dc995a93843f) and click on Share -> Publish.
+## Setup and Installation
 
-## Can I connect a custom domain to my Lovable project?
+1. Clone this repository
+2. Install dependencies with `npm install`
+3. Set up a Supabase project and add the connection details
+4. Run the development server with `npm run dev`
 
-Yes, you can!
+## Future Enhancements
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- OneDrive integration for document backup
+- Admin panel for managing license types and legal references
+- User management and role-based access control
+- Document versioning and approval workflows
+- Additional AI model support
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## License
+
+This project is proprietary and confidential.
+
