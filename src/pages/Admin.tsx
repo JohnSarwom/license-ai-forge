@@ -8,6 +8,10 @@ import { LicenseTypeManager } from "@/components/admin/LicenseTypeManager";
 import { LegalReferenceManager } from "@/components/admin/LegalReferenceManager";
 import { UserManager } from "@/components/admin/UserManager";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { LicenseTemplateEditor } from "@/components/admin/LicenseTemplateEditor";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -56,6 +60,20 @@ const Admin = () => {
               <p className="text-muted-foreground mt-2">
                 Manage license types, legal references, and system users
               </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="flex justify-end">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Settings size={16} />
+                    License Template Settings
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl w-full">
+                  <LicenseTemplateEditor />
+                </DialogContent>
+              </Dialog>
             </motion.div>
             
             <motion.div variants={itemVariants}>
