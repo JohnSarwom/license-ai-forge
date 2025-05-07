@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Maximize2, Edit } from "lucide-react";
 
-interface TemplateSettings {
+export interface TemplateSettings {
   chairmanName: string;
   chairmanTitle: string;
   footerText: string;
@@ -93,7 +93,7 @@ export function LicensePreview({
   };
   
   const licenseContent = (fullscreen = false) => (
-    <div className={`w-full bg-white text-black overflow-hidden ${fullscreen ? "h-full" : "border border-gray-300"}`} style={{ aspectRatio: "1.414/1" }}>
+    <div className={`w-full bg-white text-black overflow-hidden ${fullscreen ? "h-full" : "border border-gray-300"}`} style={{ aspectRatio: fullscreen ? "auto" : "1.414/1", width: fullscreen ? "100%" : "auto" }}>
       <div className="flex flex-col h-full">
         {/* Header with logo and dates */}
         <div className="flex justify-between p-6 border-b border-gray-200">
@@ -230,6 +230,10 @@ export function LicensePreview({
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-[95vw] max-h-[95vh] w-full overflow-auto p-1">
+            <DialogHeader>
+              <DialogTitle>License Preview</DialogTitle>
+              <DialogDescription>View the license in full size</DialogDescription>
+            </DialogHeader>
             {licenseContent(true)}
           </DialogContent>
         </Dialog>

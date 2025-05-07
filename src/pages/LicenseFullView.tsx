@@ -106,21 +106,27 @@ const LicenseFullView = () => {
         </motion.div>
       </div>
       
-      <style jsx global>{`
-        @media print {
-          body {
-            margin: 0;
-            padding: 0;
+      <style>
+        {`
+          @media print {
+            body {
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 100% !important;
+              padding: 0 !important;
+            }
+            button, .print-hide {
+              display: none !important;
+            }
+            @page {
+              size: A4 landscape;
+              margin: 1cm;
+            }
           }
-          .container {
-            max-width: 100% !important;
-            padding: 0 !important;
-          }
-          button, .print-hide {
-            display: none !important;
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

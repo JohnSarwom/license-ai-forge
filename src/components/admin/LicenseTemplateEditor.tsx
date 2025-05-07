@@ -10,7 +10,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LicensePreview } from "@/components/LicensePreview";
+import { LicensePreview, TemplateSettings } from "@/components/LicensePreview";
 
 const templateSchema = z.object({
   chairmanName: z.string().min(2, "Chairman name must be at least 2 characters"),
@@ -26,9 +26,19 @@ const templateSchema = z.object({
 
 type TemplateFormValues = z.infer<typeof templateSchema>;
 
+interface PreviewData {
+  companyName: string;
+  activityDescription: string;
+  licenseNumber: string;
+  issueDate: string;
+  expiryDate: string;
+  isEditable: boolean;
+  templateSettings?: TemplateSettings;
+}
+
 export function LicenseTemplateEditor() {
   const { toast } = useToast();
-  const [previewData, setPreviewData] = useState({
+  const [previewData, setPreviewData] = useState<PreviewData>({
     companyName: "Pacifund Financial Services",
     activityDescription: "Advising on Corporate Finance",
     licenseNumber: "CML040123",
@@ -230,7 +240,7 @@ export function LicenseTemplateEditor() {
                 issueDate={previewData.issueDate}
                 expiryDate={previewData.expiryDate}
                 templateSettings={form.getValues()}
-                isEditable={true}
+                isEditable={previewData.isEditable}
               />
             </CardContent>
           </Card>

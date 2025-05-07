@@ -11,21 +11,25 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Maximize2, Edit, Check, X, Plus, Trash } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Maximize2, Edit, Check, X, Plus, Trash, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 interface ComplianceItem {
   category: string;
   items: string[];
   reference?: string;
+  actSections?: string[];
 }
 
 interface ComplianceTableProps {
   items: ComplianceItem[];
   isEditable?: boolean;
 }
+
+const CAPITAL_MARKET_ACT_URL = "https://www.scpng.gov.pg/regulatory-framework/capital-market-act-2015";
 
 export function ComplianceTable({ items: initialItems, isEditable = false }: ComplianceTableProps) {
   const [items, setItems] = useState<ComplianceItem[]>(initialItems);
@@ -39,6 +43,7 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
     category: string;
     content: string;
   } | null>(null);
+  const { toast } = useToast();
   
   // Group items by category
   const categories = Array.from(new Set(items.map(item => item.category)));
@@ -109,6 +114,28 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
     }
   };
   
+  const openActSection = (category: string, index: number) => {
+    const categoryItem = items.find(item => item.category === category);
+    let section = "34"; // Default section
+    
+    // Find section references in the data or infer them from category name
+    if (categoryItem && categoryItem.actSections && categoryItem.actSections[index]) {
+      section = categoryItem.actSections[index];
+    } else if (category === 'Additional Conditions') {
+      section = "45";
+    } else if (category === 'Exemptions') {
+      section = "46";
+    }
+    
+    // Open the Capital Market Act URL with the section anchor
+    window.open(`${CAPITAL_MARKET_ACT_URL}#section-${section}`, '_blank');
+    
+    toast({
+      title: "Opening Act Reference",
+      description: `Opening Capital Market Act section ${section}`,
+    });
+  };
+  
   const tableContent = (fullscreen = false) => (
     <Card className={`w-full ${fullscreen ? "h-full" : ""}`}>
       <CardHeader>
@@ -130,7 +157,7 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
                     <span>
                       {category}
                       {category === 'Additional Conditions' && <span className="ml-2 text-xs font-normal">(CM Act s.45)</span>}
-                      {category === 'Exemptions' && <span className="ml-2 text-xs font-normal">(CM Act s.46?)</span>}
+                      {category === 'Exemptions' && <span className="ml-2 text-xs font-normal">(CM Act s.46)</span>}
                     </span>
                     {isEditable && (
                       <Button 
@@ -183,8 +210,18 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
                               </Button>
                             </div>
                           ) : (
-                            <>
-                              {content}
+                            <div className="flex items-center justify-between">
+                              <span className="hover:underline cursor-pointer" onClick={() => openActSection(category, index)}>
+                                {content}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="p-0 h-5 w-5 ml-1 invisible group-hover:visible"
+                                onClick={() => openActSection(category, index)}
+                              >
+                                <ExternalLink className="h-3 w-3 text-blue-500" />
+                              </Button>
                               {isEditable && (
                                 <div className="absolute top-0 -right-6 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
                                   <Button 
@@ -205,7 +242,7 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
                                   </Button>
                                 </div>
                               )}
-                            </>
+                            </div>
                           )}
                         </li>
                       ))}
@@ -264,6 +301,10 @@ export function ComplianceTable({ items: initialItems, isEditable = false }: Com
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-[95vw] max-h-[95vh] w-full overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Compliance Requirements</DialogTitle>
+            <DialogDescription>View all compliance data in full size</DialogDescription>
+          </DialogHeader>
           {tableContent(true)}
         </DialogContent>
       </Dialog>

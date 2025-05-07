@@ -8,7 +8,7 @@ import { LicenseTypeManager } from "@/components/admin/LicenseTypeManager";
 import { LegalReferenceManager } from "@/components/admin/LegalReferenceManager";
 import { UserManager } from "@/components/admin/UserManager";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { LicenseTemplateEditor } from "@/components/admin/LicenseTemplateEditor";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
@@ -71,6 +71,10 @@ const Admin = () => {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl w-full">
+                  <DialogHeader>
+                    <DialogTitle>License Template Editor</DialogTitle>
+                    <DialogDescription>Customize the license template appearance and content</DialogDescription>
+                  </DialogHeader>
                   <LicenseTemplateEditor />
                 </DialogContent>
               </Dialog>

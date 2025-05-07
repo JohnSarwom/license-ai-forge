@@ -14,6 +14,8 @@ import aiService, { AiConfig, defaultAiConfig } from "@/lib/aiService";
 import { getComplianceDataForLicenseType } from "@/data/complianceData";
 import { licenseTypes } from "@/data/licenseTypes";
 import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { DocumentUpload } from "@/components/DocumentUpload";
 
 const formSchema = z.object({
   companyName: z.string().min(2),
@@ -140,13 +142,13 @@ const Index = () => {
       case "create":
         return (
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="flex flex-col gap-6"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="mx-auto w-full max-w-2xl">
               <LicenseForm onSubmit={handleFormSubmit} />
               
               {licenseData && (
@@ -165,16 +167,23 @@ const Index = () => {
               )}
             </motion.div>
             
-            <div className="space-y-6">
+            <motion.div 
+              className="space-y-8 mt-4"
+              variants={containerVariants}
+            >
               <motion.div id="license-preview" ref={licenseRef} variants={itemVariants}>
+                <h2 className="text-xl font-semibold mb-4 text-center">License Preview</h2>
                 {licenseData ? (
-                  <LicensePreview 
-                    companyName={licenseData.companyName}
-                    activityDescription={licenseData.activityDescription}
-                    licenseNumber={licenseData.licenseNumber}
-                    issueDate={licenseData.issueDate}
-                    expiryDate={licenseData.expiryDate}
-                  />
+                  <div className="w-full max-w-5xl mx-auto a4-landscape">
+                    <LicensePreview 
+                      companyName={licenseData.companyName}
+                      activityDescription={licenseData.activityDescription}
+                      licenseNumber={licenseData.licenseNumber}
+                      issueDate={licenseData.issueDate}
+                      expiryDate={licenseData.expiryDate}
+                      isEditable={true}
+                    />
+                  </div>
                 ) : (
                   <motion.div 
                     className="w-full h-64 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-lg flex items-center justify-center border-2 border-dashed shadow-sm"
@@ -187,8 +196,11 @@ const Index = () => {
               </motion.div>
               
               <motion.div id="compliance-table" ref={complianceRef} variants={itemVariants}>
+                <h2 className="text-xl font-semibold mb-4 text-center">Compliance Data</h2>
                 {complianceData.length > 0 ? (
-                  <ComplianceTable items={complianceData} />
+                  <div className="w-full max-w-5xl mx-auto a4-landscape">
+                    <ComplianceTable items={complianceData} isEditable={true} />
+                  </div>
                 ) : (
                   <motion.div 
                     className="w-full h-40 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-lg flex items-center justify-center border-2 border-dashed shadow-sm"
@@ -199,18 +211,27 @@ const Index = () => {
                   </motion.div>
                 )}
               </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
         );
       case "settings":
         return (
           <motion.div 
-            className="max-w-2xl mx-auto"
+            className="max-w-4xl mx-auto"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
+            <motion.div variants={itemVariants} className="mb-8">
+              <Card>
+                <CardContent className="pt-6">
+                  <h2 className="text-2xl font-semibold mb-6">Knowledge Base</h2>
+                  <DocumentUpload />
+                </CardContent>
+              </Card>
+            </motion.div>
+            
             <motion.div variants={itemVariants}>
               <AiConfigPanel 
                 config={aiConfig} 
@@ -250,6 +271,33 @@ const Index = () => {
           {renderContent()}
         </main>
       </div>
+      
+      <style>
+        {`
+          .a4-landscape {
+            aspect-ratio: 1.414 / 1;
+            width: 100%;
+          }
+          
+          @media print {
+            @page {
+              size: A4 landscape;
+              margin: 1cm;
+            }
+            body {
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 100% !important;
+              padding: 0 !important;
+            }
+            button, .print-hide {
+              display: none !important;
+            }
+          }
+        `}
+      </style>
     </ThemeProvider>
   );
 };
