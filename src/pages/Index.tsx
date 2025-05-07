@@ -6,13 +6,14 @@ import { LicensePreview } from "@/components/LicensePreview";
 import { ComplianceTable } from "@/components/ComplianceTable";
 import { ExportOptions } from "@/components/ExportOptions";
 import { AiConfigPanel } from "@/components/AiConfigPanel";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { format } from "date-fns";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import aiService, { AiConfig, defaultAiConfig } from "@/lib/aiService";
 import { getComplianceDataForLicenseType } from "@/data/complianceData";
 import { licenseTypes } from "@/data/licenseTypes";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
   companyName: z.string().min(2),
@@ -94,33 +95,78 @@ const Index = () => {
     return !!aiConfig.apiKey;
   };
   
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: {
+        staggerChildren: 0.05,
+        staggerDirection: -1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+  
   const renderContent = () => {
     switch (currentTab) {
       case "dashboard":
         return (
-          <div className="flex items-center justify-center h-full">
-            <h2 className="text-2xl font-bold">Dashboard Coming Soon</h2>
-          </div>
+          <motion.div 
+            className="flex items-center justify-center h-full"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.h2 
+              className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+              variants={itemVariants}
+            >
+              Dashboard Coming Soon
+            </motion.h2>
+          </motion.div>
         );
       case "create":
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.div variants={itemVariants}>
               <LicenseForm onSubmit={handleFormSubmit} />
               
               {licenseData && (
-                <div className="mt-6">
+                <motion.div 
+                  className="mt-6"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  transition={{ duration: 0.3 }}
+                >
                   <ExportOptions 
                     licenseElementId="license-preview" 
                     complianceElementId="compliance-table"
                     licenseName={licenseData.companyName} 
                   />
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
             
             <div className="space-y-6">
-              <div id="license-preview" ref={licenseRef}>
+              <motion.div id="license-preview" ref={licenseRef} variants={itemVariants}>
                 {licenseData ? (
                   <LicensePreview 
                     companyName={licenseData.companyName}
@@ -130,39 +176,66 @@ const Index = () => {
                     expiryDate={licenseData.expiryDate}
                   />
                 ) : (
-                  <div className="w-full h-64 bg-muted rounded-md flex items-center justify-center">
+                  <motion.div 
+                    className="w-full h-64 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-lg flex items-center justify-center border-2 border-dashed shadow-sm"
+                    whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <p className="text-muted-foreground">License preview will appear here</p>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
               
-              <div id="compliance-table" ref={complianceRef}>
+              <motion.div id="compliance-table" ref={complianceRef} variants={itemVariants}>
                 {complianceData.length > 0 ? (
                   <ComplianceTable items={complianceData} />
                 ) : (
-                  <div className="w-full h-40 bg-muted rounded-md flex items-center justify-center">
+                  <motion.div 
+                    className="w-full h-40 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-lg flex items-center justify-center border-2 border-dashed shadow-sm"
+                    whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <p className="text-muted-foreground">Compliance data will appear here</p>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         );
       case "settings":
         return (
-          <div className="max-w-2xl mx-auto">
-            <AiConfigPanel 
-              config={aiConfig} 
-              onConfigChange={setAiConfig}
-              onTestConnection={handleTestAiConnection}
-            />
-          </div>
+          <motion.div 
+            className="max-w-2xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.div variants={itemVariants}>
+              <AiConfigPanel 
+                config={aiConfig} 
+                onConfigChange={setAiConfig}
+                onTestConnection={handleTestAiConnection}
+              />
+            </motion.div>
+          </motion.div>
         );
       case "admin":
         return (
-          <div className="flex items-center justify-center h-full">
-            <h2 className="text-2xl font-bold">Admin Panel Coming Soon</h2>
-          </div>
+          <motion.div 
+            className="flex items-center justify-center h-full"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.h2 
+              className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+              variants={itemVariants}
+            >
+              Admin Panel Coming Soon
+            </motion.h2>
+          </motion.div>
         );
       default:
         return null;
@@ -171,7 +244,7 @@ const Index = () => {
 
   return (
     <ThemeProvider defaultTheme="light">
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-indigo-50">
         <Header currentTab={currentTab} onTabChange={setCurrentTab} />
         <main className="flex-1 container py-6">
           {renderContent()}
