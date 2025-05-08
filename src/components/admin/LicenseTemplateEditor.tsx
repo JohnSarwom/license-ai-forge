@@ -73,10 +73,10 @@ export function LicenseTemplateEditor() {
     });
     
     // Update the preview with new template settings
-    setPreviewData({
-      ...previewData,
+    setPreviewData(prevData => ({
+      ...prevData,
       templateSettings: values,
-    });
+    }));
   }
   
   return (

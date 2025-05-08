@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { LicenseTemplateEditor } from "@/components/admin/LicenseTemplateEditor";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, FileText, Book } from "lucide-react";
+import { AIProcessingGuide } from "@/components/admin/AIProcessingGuide";
 
 const Admin = () => {
   const { toast } = useToast();
@@ -62,7 +63,7 @@ const Admin = () => {
               </p>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="flex justify-end">
+            <motion.div variants={itemVariants} className="flex justify-end gap-3">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="flex items-center gap-2">
@@ -76,6 +77,43 @@ const Admin = () => {
                     <DialogDescription>Customize the license template appearance and content</DialogDescription>
                   </DialogHeader>
                   <LicenseTemplateEditor />
+                </DialogContent>
+              </Dialog>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Book size={16} />
+                    AI Processing Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-6xl w-full">
+                  <DialogHeader>
+                    <DialogTitle>AI Processing Documentation</DialogTitle>
+                    <DialogDescription>Technical details about AI system integration</DialogDescription>
+                  </DialogHeader>
+                  <AIProcessingGuide />
+                </DialogContent>
+              </Dialog>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <FileText size={16} />
+                    View Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>AI Processing Documentation</DialogTitle>
+                    <DialogDescription>Full technical documentation</DialogDescription>
+                  </DialogHeader>
+                  <div className="prose prose-slate mt-4">
+                    <iframe 
+                      src="/documentation/AIProcessingGuide" 
+                      className="w-full h-[60vh] border rounded"
+                    ></iframe>
+                  </div>
                 </DialogContent>
               </Dialog>
             </motion.div>
