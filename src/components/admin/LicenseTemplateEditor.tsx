@@ -75,7 +75,7 @@ export function LicenseTemplateEditor() {
     // Update the preview with new template settings
     setPreviewData(prevData => ({
       ...prevData,
-      templateSettings: values,
+      templateSettings: values as TemplateSettings,
     }));
   }
   
@@ -239,7 +239,7 @@ export function LicenseTemplateEditor() {
                 licenseNumber={previewData.licenseNumber}
                 issueDate={previewData.issueDate}
                 expiryDate={previewData.expiryDate}
-                templateSettings={form.getValues()}
+                templateSettings={form.getValues() as TemplateSettings}
                 isEditable={previewData.isEditable}
               />
             </CardContent>
